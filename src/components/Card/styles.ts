@@ -15,7 +15,8 @@ export const styles = StyleSheet.create({
 
     height: 64,
 
-    padding: 12
+    padding: 12,
+    marginBottom: 8
   },
   text: {
     fontSize: 14,
@@ -23,7 +24,7 @@ export const styles = StyleSheet.create({
 
     color: colors.gray100,
 
-    maxWidth: 250
+    maxWidth: 250,
   },
   checkbox: {
     borderRadius: 99999,

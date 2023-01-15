@@ -12,9 +12,11 @@ interface CardProps {
   id: string;
   taskName: string;
   completed: boolean;
+  onCheckTask: (taskId: string) => void;
+  onDeleteTask: (taskId: string) => void;
 }
 
-export function Card({ taskName, id }: CardProps) {
+export function Card({ taskName, id, onCheckTask, onDeleteTask }: CardProps) {
   const [isChecked, setIsChecked] = useState<boolean>(false)
   const [doesButtonClicked, setButtonClicked] = useState<boolean>(false)
 
@@ -30,6 +32,7 @@ export function Card({ taskName, id }: CardProps) {
           value={isChecked}
           onValueChange={(ev) => {
             setIsChecked(ev)
+            onCheckTask(id)
           }}
           color={isChecked ? colors.blueDark : undefined}
         />
@@ -43,6 +46,7 @@ export function Card({ taskName, id }: CardProps) {
         style={styles.button}
         onPressIn={() => setButtonClicked(true)}
         onPressOut={() => setButtonClicked(false)}
+        onPress={() => onDeleteTask(id)}
       >
         <Trash weight="bold" color={doesButtonClicked ? colors.danger : colors.gray300} size={18} />
       </TouchableOpacity>

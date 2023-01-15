@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-import { Alert, TextInput, TouchableOpacity, View } from "react-native";
+import { Alert, FlatList, Image, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Header } from "../../components/header";
 import { styles } from "./styles";
 import { colors } from "../../utils/colors";
@@ -9,7 +9,10 @@ import { PlusCircle } from "phosphor-react-native"
 import { Counter } from "../../components/counter";
 
 import uuid from "react-native-uuid"; 
-import { List } from "../../components/List";
+import clipboard from "../../assets/clipboard.png";
+import { Card } from "../../components/Card";
+
+import { styles as listStyles } from "../../components/List/styles";
 
 interface Task {
   id: string;
@@ -36,6 +39,29 @@ export function Home() {
     setTask("")
 
     Alert.alert("Success", `Task added:\n\n"${task.slice(0, 50)}".`)
+  }
+
+  function handleCheckTask(taskId: string) {
+    setTasks(state => state.map(_task => {
+      if (_task.id === taskId) {
+        _task.completed = !_task.completed;
+      }
+      
+      return _task;
+    }))
+  }
+
+  function handleDeleteTask(taskId: string) {
+    Alert.alert("Delete Task", "Deseja mesmo deletar a tarefa?", [
+      {
+        text: "Não",
+        style: "cancel"
+      },
+      {
+        text: "Sim",
+        onPress: () => setTasks(state => state.filter(_task => _task.id !== taskId))
+      }
+    ])
   }
 
   const taskCompleted = tasks.filter(_task => _task.completed).length
@@ -65,7 +91,36 @@ export function Home() {
       </View>
       <Counter taskCompleted={taskCompleted} taskToComplete={taskToComplete} />
 
-      <List data={tasks} />
+      <FlatList
+        style={listStyles.container}
+        data={tasks}
+        keyExtractor={item => item.id}
+
+        ListEmptyComponent={() => {
+          return (
+            <View style={listStyles.emptyContainer}>
+              <Image source={clipboard} style={listStyles.image} />
+
+              <Text style={[listStyles.text, { fontWeight: "bold" }]}>
+                Você ainda não tem tarefas cadastradas
+              </Text>
+              <Text style={listStyles.text}>
+                Crie tarefas e organize seus itens a fazer
+              </Text>
+            </View>
+          )
+        }}
+        renderItem={({ item }) => (
+          <Card 
+            key={item.id} 
+            onDeleteTask={handleDeleteTask} 
+            onCheckTask={handleCheckTask} 
+            {...item} 
+          />
+        )}
+
+        showsVerticalScrollIndicator={false}
+      />
     </View>
   )
 }
