@@ -1,7 +1,7 @@
 import { StatusBar } from 'react-native';
 import { Home } from './src/screens/home';
 
-import * as Svg from 'react-native-svg';
+import Toast from 'react-native-toast-message';
 
 export default function App() {
   return (
@@ -12,6 +12,10 @@ export default function App() {
         translucent
       />
       <Home />  
+      <Toast 
+        position='top'
+        topOffset={50}
+      />
     </>
   );
 }

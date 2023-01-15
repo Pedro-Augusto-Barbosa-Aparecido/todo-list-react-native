@@ -38,6 +38,7 @@ export function Card({ taskName, id, onCheckTask, onDeleteTask }: CardProps) {
         />
         <Text 
           style={[styles.text, isChecked && { textDecorationLine: "line-through", color: colors.gray300 }]}
+          numberOfLines={2}
         >
           {taskName}
         </Text>

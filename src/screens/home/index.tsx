@@ -14,6 +14,8 @@ import { Card } from "../../components/Card";
 
 import { styles as listStyles } from "../../components/List/styles";
 
+import Toast from 'react-native-toast-message';
+
 interface Task {
   id: string;
   taskName: string;
@@ -31,20 +33,46 @@ export function Home() {
   function handleAddTask () {
     const taskToAdd: Task = {
       completed: false,
-      taskName: task,
+      taskName: task.trim(),
       id: String(uuid.v4())
+    }
+
+    if (taskToAdd.taskName.length === 0) {
+      return Toast.show({
+        type: "error",
+        text1: "Tarefa inválida",
+        text2: `Insira um conteúdo válido, para adicionar uma tarefa!`
+      })
+    }
+
+    if (taskToAdd.taskName.length < 15) {
+      return Toast.show({
+        type: "error",
+        text1: "Tarefa inválida",
+        text2: `Para criar uma tarefa é necessário ter no mínimo 15 caracteres!`
+      })
     }
 
     setTasks(state => [...state, taskToAdd])
     setTask("")
 
-    Alert.alert("Success", `Task added:\n\n"${task.slice(0, 50)}".`)
+    Toast.show({
+      type: "success",
+      text1: "Criação concluída",
+      text2: `Task "${task}" criada com sucesso!`
+    })
   }
 
   function handleCheckTask(taskId: string) {
     setTasks(state => state.map(_task => {
       if (_task.id === taskId) {
         _task.completed = !_task.completed;
+
+        Toast.show({
+          type: "success",
+          text1: "Sucesso",
+          text2: `Status da tarefa alterado com sucesso!`
+        })
       }
       
       return _task;
@@ -59,7 +87,14 @@ export function Home() {
       },
       {
         text: "Sim",
-        onPress: () => setTasks(state => state.filter(_task => _task.id !== taskId))
+        onPress: () => {
+          setTasks(state => state.filter(_task => _task.id !== taskId))
+          Toast.show({
+            type: "success",
+            text1: "Sucesso",
+            text2: `Tarefa deletada com sucesso!`
+          })
+        }
       }
     ])
   }
