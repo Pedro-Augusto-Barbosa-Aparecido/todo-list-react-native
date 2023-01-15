@@ -1,11 +1,21 @@
 import { useState } from "react"
 
-import { TextInput, TouchableOpacity, View } from "react-native";
+import { Alert, TextInput, TouchableOpacity, View } from "react-native";
 import { Header } from "../../components/header";
 import { styles } from "./styles";
 import { colors } from "../../utils/colors";
 
 import { PlusCircle } from "phosphor-react-native"
+import { Counter } from "../../components/counter";
+
+import uuid from "react-native-uuid"; 
+import { List } from "../../components/List";
+
+interface Task {
+  id: string;
+  taskName: string;
+  completed: boolean;
+}
 
 export function Home() {
   const [isButtonClicked, setIsButtonClicked] = useState<boolean>(false)
@@ -13,9 +23,23 @@ export function Home() {
 
   const [task, setTask] = useState<string>("")
 
-  function handleAddTask () {
+  const [tasks, setTasks] = useState<Task[]>([])
 
+  function handleAddTask () {
+    const taskToAdd: Task = {
+      completed: false,
+      taskName: task,
+      id: String(uuid.v4())
+    }
+
+    setTasks(state => [...state, taskToAdd])
+    setTask("")
+
+    Alert.alert("Success", `Task added:\n\n"${task.slice(0, 50)}".`)
   }
+
+  const taskCompleted = tasks.filter(_task => _task.completed).length
+  const taskToComplete = tasks.filter(_task => !_task.completed).length
 
   return (
     <View style={styles.container}>
@@ -39,6 +63,9 @@ export function Home() {
           <PlusCircle color={colors.gray100} weight="bold" size={20} />
         </TouchableOpacity>
       </View>
+      <Counter taskCompleted={taskCompleted} taskToComplete={taskToComplete} />
+
+      <List data={tasks} />
     </View>
   )
 }

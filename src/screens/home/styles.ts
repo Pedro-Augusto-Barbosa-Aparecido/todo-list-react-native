@@ -4,7 +4,7 @@ import { StyleSheet } from "react-native";
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.gray600
+    backgroundColor: colors.gray600,
   },
   form: {
     flexDirection: "row",
@@ -24,7 +24,9 @@ export const styles = StyleSheet.create({
     color: colors.gray100,
 
     borderWidth: 1,
-    borderColor: "transparent"
+    borderColor: "transparent",
+
+    fontSize: 16
   },
   inputFocused: {
     borderColor: colors.purpleDark
